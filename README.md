@@ -4,11 +4,7 @@ PayFlow is a simplified fintech backend inspired by systems like PhonePe or Goog
 It allows registering users, assigning wallet balances, and recording money transfers - all via REST APIs.The API is database-backed and ready for frontend integration.
 
 
-##  Project Setup
-
 ##  Technology Stack
-## 🚀 Technology Stack
-
 - Application Framework: Spring Boot 3.2.0  
 - REST API Support: Spring Web  
 - Database Abstraction: Spring Data JPA  
