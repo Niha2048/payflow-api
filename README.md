@@ -3,6 +3,12 @@
 PayFlow is a simplified fintech backend inspired by systems like PhonePe or Google Pay.  
 It allows registering users, assigning wallet balances, and recording money transfers - all via REST APIs.The API is database-backed and ready for frontend integration.
 
+## Project Write‑Up
+
+For detailed explanations, answers to assignment questions, and supporting screenshots,  
+please refer to the attached **PayFlow_WriteUp.pdf** located in the repository root.
+
+## Project Set up
 
 ##  Technology Stack
 - Application Framework: Spring Boot 3.2.0  
@@ -204,8 +210,6 @@ where u1_0.upi_id = ?
 - **Derived method names** are concise and ideal for simple queries. They rely on Spring Data JPA’s naming conventions to generate SQL automatically.  
 - **JPQL with @Query** offers flexibility for more complex queries while remaining database agnostic, since JPQL operates on entities rather than raw tables.  
 - **Native SQL** is the least preferred because it ties the application to a specific database dialect, reduces portability, and bypasses JPA’s abstraction layer. It should only be used when JPQL cannot express the query or for performance critical cases.
-
-Here’s a **README‑ready section** showing how to test all your REST endpoints using `curl`. This matches the style of the rest of your documentation:
 
 
 ##  Testing with Curl
