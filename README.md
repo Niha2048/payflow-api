@@ -23,8 +23,11 @@ For detailed explanations, conceptual questions, and supporting screenshots, ple
 
 1. Clone or download the project.
 2. Navigate into the project folder.
-3. Run with Maven:
+3. Build and Run with Maven:
 
+```bash
+mvn clean install 
+```
 ```bash
 mvn spring-boot:run
 ```
