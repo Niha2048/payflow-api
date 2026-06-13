@@ -7,8 +7,8 @@ It allows registering users, assigning wallet balances, and recording money tran
 
 ### Project Write‑Up
 
-For detailed explanations, answers to assignment questions, and supporting screenshots,  
-please refer to the attached **PayFlow_WriteUp.pdf** located in the repository root.
+For detailed explanations, conceptual questions, and supporting screenshots,  
+please refer to the attached **PayFlow_WriteUp.pdf** [text](PayFlow_WriteUp.pdf) located in the repository root.
 
 
 ###  Technology Stack
