@@ -1,10 +1,30 @@
 # PayFlow Backend API
 
 PayFlow is a simplified fintech backend inspired by systems like PhonePe or Google Pay.  
-It allows registering users, assigning wallet balances, and recording money transfers — all via REST APIs.
+It allows registering users, assigning wallet balances, and recording money transfers - all via REST APIs.The API is database-backed and ready for frontend integration.
 
 
 ##  Project Setup
+
+##  Technology Stack
+## 🚀 Technology Stack
+
+- Application Framework: Spring Boot 3.2.0  
+- REST API Support: Spring Web  
+- Database Abstraction: Spring Data JPA  
+- In‑Memory Database: H2 Database  
+- Build Tool: Maven  
+- Programming Language: Java 21  
+
+
+
+##  Application Startup
+
+The application will start on:  
+ [http://localhost:8080](http://localhost:8080)
+
+---
+
 
 ##  How to Run the App
 
@@ -18,25 +38,57 @@ It allows registering users, assigning wallet balances, and recording money tran
 5. Access the H2 console at **http://localhost:8080/h2-console**  
    - JDBC URL: `jdbc:h2:file:./data/payflowdb` (or `jdbc:h2:mem:testdb` if using in-memory)  
    - Username: `sa`  
-   - Password: (blank password due to in memory db)
+   - Password: *(leave empty)* 
 
 
 
-##  Project Structure
+##  Architecture
 
-Organized into four packages:
+The project is organized into four main layers, each with specific classes and responsibilities:
 
-- **entity**  
-  Contains JPA entity classes (`User`, `Transaction`). These map Java fields to database columns.
+### 1. Entity Layer (`com.payflow.payflow_api.entity`)
+Defines the data model and maps Java objects to database tables using JPA annotations.
+- **User**  
+  Represents a system user with fields: `id`, `name`, `upiId`, `phoneNumber`, `balance`.  
+  Role: Maps to the `users` table and stores account details.
+- **Transaction**  
+  Represents a money transfer with fields: `id`, `senderUpiId`, `receiverUpiId`, `amount`, `timestamp`.  
+  Role: Maps to the `transaction` table and records payment history.
 
-- **repository**  
-  Interfaces extending `JpaRepository`. Provide CRUD operations and derived queries like `findByUpiId`.
+---
 
-- **service**  
-  Business logic layer. Handles registering users, fetching users, and sending money transactions.
+### 2. Repository Layer (`com.payflow.payflow_api.repository`)
+Provides database access using Spring Data JPA. Extends `JpaRepository` for CRUD operations.
+- **UserRepository**  
+  Role: Handles user data access. Includes derived query method `findByUpiId(String upiId)` to look up users by UPI ID.
+- **TransactionRepository**  
+  Role: Handles transaction data access. Provides CRUD operations for transaction records.
 
-- **controller**  
-  REST endpoints (`/users`, `/transactions`). Expose APIs for frontend or external clients.
+---
+
+### 3. Service Layer (`com.payflow.payflow_api.service`)
+Contains business logic and interacts with repositories.
+- **UserService**  
+  Role: Methods for registering users (`registerUser`), retrieving users by ID (`getUserById`), finding by UPI (`findByUpiId`), and listing all users (`getAllUsers`).  
+  Uses `@Autowired` to inject `UserRepository`.
+- **TransactionService**  
+  Role: Method for sending money (`sendMoney`). Saves transaction records and can include validation or balance updates.  
+  Uses `@Autowired` to inject `TransactionRepository`.
+
+---
+
+### 4. Controller Layer (`com.payflow.payflow_api.controller`)
+Handles HTTP requests and responses. Defines REST endpoints and delegates work to the service layer.
+- **UserController**  
+  Role: Exposes endpoints at `/users` for user operations:  
+  - `POST /users` → Register a new user  
+  - `GET /users` → List all users  
+  - `GET /users/{id}` → Retrieve user by ID  
+  - `GET /users/upi/{upiId}` → Retrieve user by UPI ID
+- **TransactionController**  
+  Role: Exposes endpoints at `/transactions` for transaction operations:  
+  - `POST /transactions` → Record a new transaction  
+  - `GET /transactions` → List all transactions
 
 ---
 
