@@ -14,13 +14,6 @@ It allows registering users, assigning wallet balances, and recording money tran
 
 
 
-##  Application Startup
-
-The application will start on:  
- [http://localhost:8080](http://localhost:8080)
-
----
-
 
 ##  How to Run the App
 
@@ -28,7 +21,9 @@ The application will start on:
 2. Navigate into the project folder.
 3. Run with Maven:
 
-   mvn spring-boot:run
+```bash
+mvn spring-boot:run
+```
 
 4. The app starts on **http://localhost:8080** using Spring Boot’s embedded Tomcat server.
 5. Access the H2 console at **http://localhost:8080/h2-console**  
