@@ -46,7 +46,7 @@ Defines the data model and maps Java objects to database tables using JPA annota
   Represents a money transfer with fields: `id`, `senderUpiId`, `receiverUpiId`, `amount`, `timestamp`.  
   Role: Maps to the `transaction` table and records payment history.
 
----
+
 
 ### 2. Repository Layer (`com.payflow.payflow_api.repository`)
 Provides database access using Spring Data JPA. Extends `JpaRepository` for CRUD operations.
@@ -55,7 +55,7 @@ Provides database access using Spring Data JPA. Extends `JpaRepository` for CRUD
 - **TransactionRepository**  
   Role: Handles transaction data access. Provides CRUD operations for transaction records.
 
----
+
 
 ### 3. Service Layer (`com.payflow.payflow_api.service`)
 Contains business logic and interacts with repositories.
@@ -66,7 +66,7 @@ Contains business logic and interacts with repositories.
   Role: Method for sending money (`sendMoney`). Saves transaction records and can include validation or balance updates.  
   Uses `@Autowired` to inject `TransactionRepository`.
 
----
+
 
 ### 4. Controller Layer (`com.payflow.payflow_api.controller`)
 Handles HTTP requests and responses. Defines REST endpoints and delegates work to the service layer.
@@ -81,7 +81,7 @@ Handles HTTP requests and responses. Defines REST endpoints and delegates work t
   - `POST /transactions` → Record a new transaction  
   - `GET /transactions` → List all transactions
 
----
+
 
 ##  Spring Boot Features in PayFlow
 
@@ -92,7 +92,7 @@ In PayFlow:
 - The application is immediately accessible at `http://localhost:8080`.  
 - This simplifies deployment and makes local development faster.
 
----
+
 
 ### 2. Auto-Configuration
 Spring Boot automatically configures beans and dependencies based on what’s present in the classpath.  
@@ -103,7 +103,7 @@ In PayFlow:
 - Entity scanning is automatic — all `@Entity` classes (`User`, `Transaction`) are detected without manual setup.  
 - REST controllers (`UserController`, `TransactionController`) are registered automatically.
 
----
+
 
 ### 3. Production-Ready Defaults
 Spring Boot provides sensible defaults that make applications ready for production.  
@@ -114,7 +114,7 @@ In PayFlow:
 - Database connection pooling is handled automatically.  
 - Default configurations reduce boilerplate and improve maintainability.
 
----
+
 
 ### 4. Developer Productivity
 Spring Boot improves developer experience with:
@@ -124,7 +124,7 @@ Spring Boot improves developer experience with:
 
 
 
-```markdown
+
 ## 🗄️ Hibernate Auto‑Generated Tables
 
 When the application starts, Hibernate automatically creates the following tables based on the entity classes:
@@ -152,7 +152,6 @@ Hibernate: create table users (
     upi_id varchar(255),
     primary key (id)
 );
-```
 ```
 
 
@@ -207,55 +206,86 @@ where u1_0.upi_id = ?
 - **JPQL with @Query** offers flexibility for more complex queries while remaining database agnostic, since JPQL operates on entities rather than raw tables.  
 - **Native SQL** is the least preferred because it ties the application to a specific database dialect, reduces portability, and bypasses JPA’s abstraction layer. It should only be used when JPQL cannot express the query or for performance critical cases.
 
-##  Postman Testing
-
-All endpoints can be tested using **Postman**:
-
-1. **Register User**  
-   - Method: POST  
-   - URL: `http://localhost:8080/users`  
-   - Body → Raw → JSON:
-     
-     {
-       "name": "Priya Sharma",
-       "upiId": "priya@okaxis",
-       "balance": 5000,
-       "phoneNumber": "9876543210"
-     }
-
-2. **List All Users**  
-   - Method: GET  
-   - URL: `http://localhost:8080/users`
-
-3. **Get User by ID**  
-   - Method: GET  
-   - URL: `http://localhost:8080/users/1`
-
-4. **Get User by UPI ID**  
-   - Method: GET  
-   - URL: `http://localhost:8080/users/upi/priya@okaxis`
-
-5. **Send Money**  
-   - Method: POST  
-   - URL: `http://localhost:8080/transactions`  
-   - Body → Raw → JSON:
-
-     {
-       "senderUpiId": "priya@okaxis",
-       "receiverUpiId": "rahul@okhdfc",
-       "amount": 200,
-       "note": "Dinner split"
-     }
-     
-
-6. **List All Transactions**  
-   - Method: GET  
-   - URL: `http://localhost:8080/transactions`
+Here’s a **README‑ready section** showing how to test all your REST endpoints using `curl`. This matches the style of the rest of your documentation:
 
 
-## Notes
+##  Testing with Curl
 
-- Data persists across runs if using **file-based H2** (`jdbc:h2:file:./data/payflowdb`).  
-- In-memory H2 (`jdbc:h2:mem:testdb`) resets on restart.  
-- Transactions store sender/receiver UPI IDs as plain strings (no foreign keys yet).  
-- `@RequestBody` is required in controllers to bind JSON payloads to Java objects.
+After starting the application (`mvn spring-boot:run`), you can test all endpoints directly from the terminal.
+
+### 1. Register a New User
+```bash
+curl -X POST http://localhost:8080/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Alice","upiId":"alice@upi","phoneNumber":"9876543210","balance":1000}'
+```
+
+### 2. List All Users
+```bash
+curl -X GET http://localhost:8080/users
+```
+
+### 3. Get User by ID
+```bash
+curl -X GET http://localhost:8080/users/1
+```
+
+### 4. Get User by UPI ID
+```bash
+curl -X GET http://localhost:8080/users/upi/alice@upi
+```
+
+### 5. Record a Transaction
+```bash
+curl -X POST http://localhost:8080/transactions \
+  -H "Content-Type: application/json" \
+  -d '{"senderUpiId":"alice@upi","receiverUpiId":"bob@upi","amount":250,"note":"Dinner payment"}'
+```
+
+### 6. List All Transactions
+```bash
+curl -X GET http://localhost:8080/transactions
+```
+
+---
+
+## ✅ Verification
+- Check the **H2 Console** at [http://localhost:8080/h2-console](http://localhost:8080/h2-console)  
+- Use JDBC URL: `jdbc:h2:mem:testdb`  
+- Username: `sa`  
+- Password: *(leave empty)*  
+- Verify that the `users` and `transaction` tables contain the inserted records.
+
+##  Future Enhancements
+
+The PayFlow application can be extended with several improvements to make it more robust and production‑ready:
+
+- **Enhanced Security**  
+  Add authentication and authorization using Spring Security and JWT tokens to protect endpoints.
+
+- **Persistent Database**  
+  Replace the in‑memory H2 database with a production‑grade database (e.g., PostgreSQL, MySQL) for real deployments.
+
+- **Transaction Validation**  
+  Implement stricter validation rules (e.g., sufficient balance checks, duplicate transaction prevention).
+
+- **Error Handling & Logging**  
+  Provide custom exception handling with meaningful error messages and integrate structured logging (e.g., Logback/SLF4J).
+
+- **API Documentation**  
+  Integrate Swagger/OpenAPI for interactive API documentation and easier testing.
+
+- **Unit & Integration Tests**  
+  Add JUnit and Mockito tests to ensure code quality and reliability.
+
+- **Monitoring & Metrics**  
+  Enable Spring Boot Actuator endpoints for health checks, metrics, and monitoring in production.
+
+- **Scalability**  
+  Containerize the application with Docker and orchestrate with Kubernetes for horizontal scaling.
+
+- **Frontend Integration**  
+  Build a simple React/Angular frontend to interact with the backend APIs.
+
+- **Notifications**  
+  Add email/SMS notifications for transactions using external services (e.g., Twilio, SendGrid).
